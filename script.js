@@ -53,3 +53,14 @@ window.onload = () => {
     alert("✅ Successfully connected to Gmail!");
   }
 };
+function generateProposal(template, data) {
+  let result = template;
+
+  for (const key in data) {
+    const placeholder = `[${key}]`;
+    const value = data[key];
+    result = result.replaceAll(placeholder, value);
+  }
+
+  return result;
+}
