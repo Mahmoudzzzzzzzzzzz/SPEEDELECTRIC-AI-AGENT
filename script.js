@@ -1,7 +1,7 @@
 // Replace these with your own values
 const GROQ_API_KEY = "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";
 const CLIENT_ID = "1077849381122-ksll30feg3qn1chq5cg9jf3afpsiu3k9.apps.googleusercontent.com";
-const REDIRECT_URI = "https://mahmoudzzzzzzzzzzz.github.io/speed-electric-agent/"; 
+const REDIRECT_URI = "https://mahmoudzzzzzzzzzzz.github.io/SPEEDELECTRIC-AI-AGENT/"; 
 
 // Function to open Gmail OAuth popup
 function connectGmail() {
