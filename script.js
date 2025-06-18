@@ -43,3 +43,13 @@ document.getElementById("sendProposalBtn").addEventListener("click", async () =>
   window.open(authUrl, '_blank', 'width=600,height=400');
 }
 });
+window.onload = () => {
+  const hash = location.hash.substring(1);
+  const params = new URLSearchParams(hash);
+
+  if (params.has('access_token')) {
+    const accessToken = params.get('access_token');
+    localStorage.setItem('gmail_token', accessToken);
+    alert("✅ Successfully connected to Gmail!");
+  }
+};
