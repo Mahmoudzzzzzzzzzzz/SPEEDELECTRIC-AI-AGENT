@@ -115,3 +115,54 @@ document.getElementById("sendProposalBtn").addEventListener("click", async () =>
     }
   }
 });
+document.getElementById("extractSentBtn").addEventListener("click", async () => {
+  const token = localStorage.getItem('gmail_token');
+  if (!token) {
+    alert("❌ Not connected to Gmail");
+    return;
+  }
+
+  // Get list of messages in Sent folder
+  const response = await fetch('https://www.googleapis.com/gmail/v1/users/me/messages?q=label:sent', {
+    headers: {
+      'Authorization': 'Bearer ' + token
+    }
+  });
+
+  const data = await response.json();
+  const messages = data.messages || [];
+
+  if (messages.length === 0) {
+    document.getElementById("customerList").innerText = "No sent emails found.";
+    return;
+  }
+
+  const customerList = document.getElementById("customerList");
+  customerList.innerHTML = "<h3>📬 Recent Sent Emails:</h3>";
+
+  for (const msg of messages.slice(0, 5)) { // Get first 5 sent emails
+    const res = await fetch(`https://www.googleapis.com/gmail/v1/users/me/messages/${msg.id}`, {
+      headers: {
+        'Authorization': 'Bearer ' + token
+      }
+    });
+
+    const email = await res.json();
+
+    const headers = email.payload.headers;
+    const to = headers.find(h => h.name === 'To')?.value || '';
+    const subject = headers.find(h => h.name === 'Subject')?.value || '';
+
+    // Try to get recipient name from To field
+    const recipientMatch = to.match(/([^<]+)/);
+    const recipientName = recipientMatch ? recipientMatch[1].trim() : to;
+
+    customerList.innerHTML += `
+      <div style="margin: 1rem 0; border-bottom: 1px solid #ccc; padding-bottom: 0.5rem;"> 
+        <strong>${recipientName}</strong><br/>
+        <em>${subject}</em><br/>
+        <small>Sent on: ${new Date(parseInt(email.internalDate)).toLocaleString()}</small>
+      </div>
+    `;
+  }
+});
