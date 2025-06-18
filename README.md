@@ -1,19 +1,26 @@
-# ⚡ Speed Electric AI Agent
+⚡ Speed Electric AI Agent - Setup Instructions ⚡
 
-A simple web app that helps you:
-- Generate electrical bid proposals
+This is a simple web app that connects to Gmail and generates electrical bid proposals using AI.
+
+✅ Features:
 - Connect to Gmail
-- Review emails before sending
+- Generate proposal using GroqCloud AI
+- Extract customers from Gmail Sent folder
+- Send emails automatically
 
-## How to Use
+🛠️ How to Use:
 
-1. Replace `"YOUR_GROQ_API_KEY_HERE"` in `script.js` with your actual GroqCloud API key.
-2. Host on GitHub Pages or run locally by opening `index.html`.
+1. Create a GitHub repo named: SPEEDELECTRIC-AI-AGENT
+2. Upload all files (index.html, style.css, script.js)
+3. Go to Google Cloud Console:
+   - Add redirect URI: https://mahmoudzzzzzzzzzzz.github.io/SPEEDELECTRIC-AI-AGENT/ 
+   - Make sure you have Gmail scopes enabled
 
-## Features
+4. Update script.js with:
+   - Your GROQ_API_KEY
+   - Your CLIENT_ID
+   - Correct REDIRECT_URI
 
-- Works as a website
-- Can be turned into a Chrome extension
-- Uses GroqCloud LLM for fast AI responses
+5. Enable GitHub Pages in repo settings
 
-Made for small businesses like yours 💡
+🎉 Done! Your app will now work in your browser.
