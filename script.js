@@ -64,3 +64,53 @@ function generateProposal(template, data) {
 
   return result;
 }
+async function sendEmailGmail(subject, body) {
+  const token = localStorage.getItem('gmail_token');
+  if (!token) {
+    alert("❌ Not connected to Gmail");
+    return;
+  }
+
+  const rawMessage = [
+    `From: me`,
+    `To: customer@example.com`,
+    `Subject: ${subject}`,
+    ``,
+    `${body}`
+  ].join('\r\n');
+
+  const encodedMessage = btoa(rawMessage).replace(/\+/g, '-').replace(/\//g, '_');
+
+  const response = await fetch('https://www.googleapis.com/gmail/v1/users/me/messages/send',  {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer ' + token,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      raw: encodedMessage
+    })
+  });
+
+  if (response.ok) {
+    alert("✅ Proposal sent successfully!");
+  } else {
+    alert("❌ Failed to send proposal.");
+  }
+}
+document.getElementById("sendProposalBtn").addEventListener("click", async () => {
+  const template = document.getElementById("proposalTemplate").value;
+  const customerData = {
+    "Project Name": "Warehouse Wiring",
+    "Customer Name": "John Smith"
+  };
+
+  const filledProposal = generateProposal(template, customerData);
+
+  document.getElementById("output").innerHTML = `<strong>Filled Proposal:</strong><br><br>${filledProposal}`;
+
+  // Optional: Ask for confirmation
+  if (confirm("Send this proposal via Gmail?")) {
+    await sendEmailGmail("Electrical Bid Proposal", filledProposal);
+  }
+});
