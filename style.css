@@ -21,6 +21,9 @@ button {
   cursor: pointer;
   font-weight: bold;
   color: white;
+  display: block;
+  width: 100%;
+  text-align: center;
 }
 
 #connectGmailBtn {
