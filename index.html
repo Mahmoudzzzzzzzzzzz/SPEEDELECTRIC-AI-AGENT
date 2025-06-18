@@ -10,21 +10,21 @@
     <h1>⚡ Speed Electric AI Agent</h1>
     <p>Automatically send electrical bid proposals via Gmail.</p>
 
-   <button id="connectGmailBtn" onclick="connectGmail()">🔗 Connect Gmail</button>
-    <button id="sendProposalBtn">📧 Send Proposal</button>
+    <!-- Gmail Connection -->
+    <button id="connectGmailBtn" onclick="connectGmail()">🔗 Connect Gmail</button>
 
-    <div id="output"></div>
+    <!-- Proposal Template Input -->
+    <h3>📝 Upload Proposal Template</h3>
+    <textarea id="proposalTemplate" rows="10" placeholder="Paste your Word template here..."></textarea>
+
+    <!-- Send Proposal Button -->
+    <button id="sendProposalBtn">📧 Generate & Send Proposal</button>
+
+    <!-- Output Area -->
+    <div id="output" style="margin-top: 1rem;"></div>
   </div>
 
+  <!-- JavaScript -->
   <script src="script.js"></script>
 </body>
 </html>
-<h3>📝 Upload Proposal Template</h3>
-<textarea id="proposalTemplate" rows="10" placeholder="Paste your Word template here..."></textarea>
-<h3>📝 Upload Proposal Template</h3>
-<textarea id="proposalTemplate" rows="10" placeholder="Paste your Word template here..."></textarea>
-
-<div id="output" style="margin-top: 1rem;"></div>
-
-<button id="connectGmailBtn" onclick="connectGmail()">🔗 Connect Gmail</button>
-<button id="sendProposalBtn">📧 Generate & Send Proposal</button>
