@@ -158,3 +158,121 @@ document.getElementById("extractSentBtn").addEventListener("click", async () => 
     alert("❌ Failed to fetch sent emails.");
   }
 });
+async function generateFollowUp(template, customerName, projectName) {
+  const prompt = `
+    Write a professional follow-up email to ${customerName} about "${projectName}".
+    Use this template:\n\n${template}\n\n
+    Keep it formal and polite.
+  `;
+
+  const response = await fetch('https://api.groq.com/openai/v1/chat/completions',  {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${GROQ_API_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      model: 'llama3-8b-8192',
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+
+  const data = await response.json();
+  return data.choices[0].message.content;
+}
+document.getElementById("generateFollowUpBtn").addEventListener("click", async () => {
+  const output = document.getElementById("output");
+  const template = document.getElementById("followUpTemplate").value;
+
+  if (!template.trim()) {
+    alert("Please paste a follow-up template.");
+    return;
+  }
+
+  output.innerText = "🧠 Generating follow-up...";
+  const customerName = "John Doe";
+  const projectName = "Warehouse Electrical Upgrade";
+
+  try {
+    const followUp = await generateFollowUp(template, customerName, projectName);
+    output.innerHTML = `<strong>Generated Follow-Up:</strong>\n\n${followUp}`;
+
+    if (confirm("Send this follow-up via Gmail?")) {
+      const sent = await sendEmail(`Re: ${projectName}`, followUp, "john@example.com");
+
+      if (sent) {
+        output.innerHTML += "\n\n✅ Follow-up sent successfully!";
+        alert("✅ Follow-up sent successfully!");
+      } else {
+        output.innerHTML += "\n\n❌ Failed to send.";
+        alert("❌ Failed to send follow-up.");
+      }
+    }
+  } catch (error) {
+    console.error(error);
+    output.innerText = "❌ Error generating or sending follow-up.";
+  }
+});
+customerList.innerHTML += `
+  <div style="margin: 1rem 0; border-bottom: 1px solid #ccc; padding-bottom: 0.5rem;">
+    <strong>${recipientName}</strong><br/>
+    <em>${subject}</em><br/>
+    <small>Sent on: ${new Date(parseInt(email.internalDate)).toLocaleString()}</small><br/>
+    <button onclick='sendAutoFollowUp("${to}", "${subject}")'>🔁 Send Follow Up</button>
+  </div>
+`;
+async function sendAutoFollowUp(recipient, previousSubject) {
+  const template = document.getElementById("followUpTemplate").value;
+
+  const prompt = `
+    Write a follow-up email to a customer.
+    Previous subject: ${previousSubject}
+    Recipient: ${recipient}
+
+    Template:
+    ${template}
+  `;
+
+  const aiResponse = await fetch('https://api.groq.com/openai/v1/chat/completions',  {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${GROQ_API_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      model: 'llama3-8b-8192',
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+
+  const aiData = await aiResponse.json();
+  const followUpEmail = aiData.choices[0].message.content;
+
+  if (confirm("Send this follow-up?\n\n" + followUpEmail)) {
+    const rawMessage = [
+      `To: ${recipient}`,
+      `Subject: Re: ${previousSubject}`,
+      ``,
+      `${followUpEmail}`
+    ].join('\r\n');
+
+    const encodedMessage = btoa(rawMessage).replace(/\+/g, '-').replace(/\//g, '_');
+
+    const sendRes = await fetch('https://www.googleapis.com/gmail/v1/users/me/messages/send',  {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('gmail_token'),
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        raw: encodedMessage
+      })
+    });
+
+    if (sendRes.ok) {
+      alert("✅ Follow-up sent!");
+    } else {
+      alert("❌ Failed to send.");
+    }
+  }
+}
