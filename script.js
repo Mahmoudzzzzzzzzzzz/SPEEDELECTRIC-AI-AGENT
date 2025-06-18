@@ -34,4 +34,12 @@ document.getElementById("sendProposalBtn").addEventListener("click", async () =>
     console.error(error);
     output.innerText = "Error generating proposal.";
   }
+  function connectGmail() {
+  const CLIENT_ID = 'YOUR_CLIENT_ID_HERE';
+  const SCOPES = 'https://www.googleapis.com/auth/gmail.send  https://www.googleapis.com/auth/gmail.readonly'; 
+
+  const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?scope=${encodeURIComponent(SCOPES)}&response_type=token&redirect_uri=${encodeURIComponent('https://yourusername.github.io/speed-electric-agent/')}&client_id=${CLIENT_ID}`;
+
+  window.open(authUrl, '_blank', 'width=600,height=400');
+}
 });
