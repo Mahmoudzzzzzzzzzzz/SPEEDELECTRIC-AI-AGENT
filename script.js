@@ -2,7 +2,6 @@
 const GROQ_API_KEY = "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";
 const CLIENT_ID = "1077849381122-ksll30feg3qn1chq5cg9jf3afpsiu3k9.apps.googleusercontent.com";
 const REDIRECT_URI = "https://mahmoudzzzzzzzzzzz.github.io/SPEEDELECTRIC-AI-AGENT/"; 
-
 // Function to open Gmail OAuth popup
 function connectGmail() {
   const SCOPES = 'https://www.googleapis.com/auth/gmail.send  https://www.googleapis.com/auth/gmail.readonly'; 
@@ -166,3 +165,68 @@ document.getElementById("extractSentBtn").addEventListener("click", async () => 
     `;
   }
 });
+customerList.innerHTML += `
+  <div style="margin: 1rem 0; border-bottom: 1px solid #ccc; padding-bottom: 0.5rem;">
+    <strong>${recipientName}</strong><br/>
+    <em>${subject}</em><br/>
+    <small>Sent on: ${new Date(parseInt(email.internalDate)).toLocaleString()}</small><br/>
+    <button onclick='sendFollowUp("${to}", "${subject}")'>🔁 Send Follow Up</button>
+  </div>
+`;
+async function sendFollowUp(recipient, previousSubject) {
+  const proposalTemplate = document.getElementById("proposalTemplate").value;
+
+  const prompt = `
+    Write a follow-up email to a customer.
+    Previous subject: ${previousSubject}
+    Recipient: ${recipient}
+
+    Template:
+    ${proposalTemplate}
+  `;
+
+  // Generate email using AI
+  const aiResponse = await fetch('https://api.groq.com/openai/v1/chat/completions',  {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${GROQ_API_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      model: 'llama3-8b-8192',
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+
+  const aiData = await aiResponse.json();
+  const followUpEmail = aiData.choices[0].message.content;
+
+  // Confirm and send via Gmail
+  if (confirm("Send this follow-up?\n\n" + followUpEmail)) {
+    const rawMessage = [
+      `To: ${recipient}`,
+      `Subject: Re: ${previousSubject}`,
+      ``,
+      `${followUpEmail}`
+    ].join('\r\n');
+
+    const encodedMessage = btoa(rawMessage).replace(/\+/g, '-').replace(/\//g, '_');
+
+    const sendRes = await fetch('https://www.googleapis.com/gmail/v1/users/me/messages/send',  {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        raw: encodedMessage
+      })
+    });
+
+    if (sendRes.ok) {
+      alert("✅ Follow-up sent!");
+    } else {
+      alert("❌ Failed to send.");
+    }
+  }
+}
