@@ -11,23 +11,51 @@
     <p>Automatically send electrical bid proposals via Gmail.</p>
 
     <!-- Gmail Connection -->
-    <button id="connectGmailBtn" onclick="connectGmail()">🔗 Connect Gmail</button>
+    <button id="connectGmailBtn">🔗 Connect Gmail</button>
 
     <!-- Proposal Template Input -->
     <h3>📝 Upload Proposal Template</h3>
     <textarea id="proposalTemplate" rows="10" placeholder="Paste your Word template here..."></textarea>
 
-    <!-- Send Proposal Button -->
+    <!-- Buttons -->
     <button id="sendProposalBtn">📧 Generate & Send Proposal</button>
+    <button id="extractSentBtn">📥 Extract Customers from Sent</button>
 
     <!-- Output Area -->
     <div id="output" style="margin-top: 1rem;"></div>
+    <div id="customerList"></div>
   </div>
-  <!-- Button to extract customers from Sent folder -->
-<button id="extractSentBtn">📥 Extract Customers from Sent</button>
 
-<!-- Area to show extracted customer data -->
-<div id="customerList" style="margin-top: 1rem;"></div>
+  <!-- JavaScript -->
+  <script src="script.js"></script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>⚡ Speed Electric AI Agent</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>⚡ Speed Electric AI Agent</h1>
+    <p>Automatically send electrical bid proposals via Gmail.</p>
+
+    <!-- Gmail Connection -->
+    <button id="connectGmailBtn">🔗 Connect Gmail</button>
+
+    <!-- Proposal Template Input -->
+    <h3>📝 Upload Proposal Template</h3>
+    <textarea id="proposalTemplate" rows="10" placeholder="Paste your Word template here..."></textarea>
+
+    <!-- Buttons -->
+    <button id="sendProposalBtn">📧 Generate & Send Proposal</button>
+    <button id="extractSentBtn">📥 Extract Customers from Sent</button>
+
+    <!-- Output Area -->
+    <div id="output" style="margin-top: 1rem;"></div>
+    <div id="customerList"></div>
+  </div>
 
   <!-- JavaScript -->
   <script src="script.js"></script>
